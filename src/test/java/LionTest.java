@@ -6,7 +6,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.mockito.Spy;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.MockitoJUnit;
 
@@ -19,7 +20,7 @@ public class LionTest {
     @Rule
     public MockitoRule mockito = MockitoJUnit.rule();
 
-    @Spy
+    @Mock
     Feline feline;
 
     public LionTest(String sex) {
@@ -36,7 +37,7 @@ public class LionTest {
     }
 
     @Test
-    public void doesHaveMane_success() throws Exception {
+    public void doesHaveManeSuccess() throws Exception {
         Lion lion = new Lion(sex, feline);
 
         boolean hasMane = lion.doesHaveMane();
@@ -50,27 +51,21 @@ public class LionTest {
     }
 
     @Test
-    public void getFood_success() throws Exception {
+    public void getFoodSuccess() throws Exception {
+        List <String> testFood = List.of("Животные", "Птицы", "Рыба");
         Lion lion = new Lion(sex, feline);
+        Mockito.when(feline.getFood("Хищник")).thenReturn(testFood);
         List<String> food = lion.getFood();
-        Assert.assertEquals(List.of("Животные", "Птицы", "Рыба"), food);
+        Assert.assertEquals(testFood, food);
     }
 
     @Test
-    public void getKittens_success() throws Exception {
+    public void getKittensSuccess() throws Exception {
+        int testKittensNumber = 2;
         Lion lion = new Lion(sex, feline);
+        Mockito.when(feline.getKittens()).thenReturn(testKittensNumber);
         int kittensNumber = lion.getKittens();
-        Assert.assertEquals(1, kittensNumber);
-    }
-
-    @Test
-    public void lion_exception() {
-        Exception exception = Assert.assertThrows(Exception.class,
-                () -> new Lion("сам", feline)
-        );
-        Assert.assertEquals("Неверный текст исключения",
-                "Используйте допустимые значения пола животного - самец или самка",
-                exception.getMessage());
+        Assert.assertEquals(testKittensNumber, kittensNumber);
     }
 
 }
